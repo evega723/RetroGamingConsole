@@ -3,6 +3,8 @@ const Load = document.getElementById("Load").addEventListener("click", () => {
     const output = document.querySelector("#cards");
     status.textContent = "Loading...";
 
+
+    // API setup
     let consoles = new XMLHttpRequest();
     consoles.open("GET", "https://ozarktechwebdev.com/api/consoles.json");
     consoles.onreadystatechange = () => {
@@ -16,8 +18,32 @@ const Load = document.getElementById("Load").addEventListener("click", () => {
                 return;
             }
 
-            //parse json to object and 
+            //declare variables
             const data = JSON.parse(consoles.responseText);
+            const consoleArray = data.consoles;
+            const summary = document.getElementById("summary");
+
+
+            //summary line
+            summary.textContent = `${consoleArray.length} consoles.`;
+
+
+            if (consoleArray.length > 0) {
+                let oldest = consoleArray[0];
+                let newest = consoleArray[0];
+
+                for (let i = 1; i < consoleArray.length; i++) {
+                    const current = consoleArray[i];
+
+                    if (current.year < oldest.year) oldest = current;
+                    if (current.year > newest.year) newest = current;
+                }
+
+                summary.textContent += ` Oldest: ${oldest.name} (${oldest.year}).`;
+                summary.textContent += ` Newest: ${newest.name} (${newest.year}).`;
+            }
+
+            //populate array + fill cards
             output.replaceChildren();
             data.consoles.forEach((consoleItem) => {
                 const card = document.createElement("article");
@@ -38,6 +64,7 @@ const Load = document.getElementById("Load").addEventListener("click", () => {
                 card.append(image, name, details);
                 output.append(card);
             });
+
 
         };
     };
