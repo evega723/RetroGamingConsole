@@ -2,19 +2,24 @@ const Load = document.getElementById("Load").addEventListener("click", () => {
     const status = document.getElementById("status");
     const output = document.querySelector("#cards");
     status.textContent = "Loading...";
+    status.style.color = "";
+    output.style.color = "";
 
 
     // API setup
     let consoles = new XMLHttpRequest();
     consoles.open("GET", "https://ozarktechwebdev.com/api/consoles.json");
     consoles.onreadystatechange = () => {
+        status.textContent = "Status: Loading"
 
 
         if (consoles.readyState == 4) {
             status.textContent = "Status: " + `${consoles.status}: Complete!`;
             if (consoles.status !== 200) {
                 output.textContent = "Request failed.";
-                status.textContent = "Status: " + `${consoles.status}: Error`;
+                status.textContent = `Status: ${consoles.status}: Error`;
+                status.style.color = "red";
+                output.style.color = "red";
                 return;
             }
 
